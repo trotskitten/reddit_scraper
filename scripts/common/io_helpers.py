@@ -2,13 +2,13 @@ import os
 import pandas as pd
 import datetime
 
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+TEMP_CSV_FOLDER = os.path.join(BASE_DIR, "data_tmp")
 
-def merge_clean_save(
-    df,
-    merged_filename,
-    log_filename,
-    base_dir
-):
+os.makedirs(TEMP_CSV_FOLDER, exist_ok=True)
+
+def merge_clean_save(df, merged_filename, log_filename):
+
     """
     Handles:
     - merging with existing CSV
@@ -27,8 +27,8 @@ def merge_clean_save(
     }
     """
 
-    merged_path = os.path.join(base_dir, merged_filename)
-    log_path = os.path.join(base_dir, log_filename)
+    merged_path = os.path.join(TEMP_CSV_FOLDER, merged_filename)
+    log_path = os.path.join(TEMP_CSV_FOLDER, log_filename)
 
     # raw before cleaning
     raw_total = len(df)
