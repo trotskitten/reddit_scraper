@@ -36,11 +36,14 @@ jobs:
             base=$(basename "$f" .csv)
             cp "$f" "data_tmp/${base}_${ts}.csv"
           done
+          
+      - name: Set artifact name with timestamp
+        run: echo "ARTIFACT_NAME=reddit-scraper-data-$(date -u +'%Y%m%d_%H%M%S')" >> $GITHUB_ENV
 
       - name: Upload CSV artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: reddit-scraper-data
+          name: ${{ env.ARTIFACT_NAME }}
           path: data_tmp/*.csv
           if-no-files-found: warn
           retention-days: 3
