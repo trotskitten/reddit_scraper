@@ -28,6 +28,14 @@ jobs:
           REDDIT_CLIENT_ID: ${{ secrets.REDDIT_CLIENT_ID }}
           REDDIT_CLIENT_SECRET: ${{ secrets.REDDIT_CLIENT_SECRET }}
 
+      - name: Create timestamped copies of merged CSVs
+        run: |
+          ts=$(date -u +'%Y%m%d_%H%M%S')
+          for f in data_tmp/*_merged.csv; do
+            [ -e "$f" ] || continue
+            base=$(basename "$f" .csv)
+            cp "$f" "data_tmp/${base}_${ts}.csv"
+          done
 
       - name: Upload CSV artifacts
         uses: actions/upload-artifact@v4
@@ -37,7 +45,6 @@ jobs:
           if-no-files-found: warn
           retention-days: 3
           
-
       - name: Send results by email
         uses: dawidd6/action-send-mail@v6
         with:
