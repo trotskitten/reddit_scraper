@@ -1,5 +1,8 @@
 # Ignore all CSV output folders
 CSV/
+data_tmp/
+
+# Ignore all loose CSVs
 *.csv
 
 # Ignore Python cache
@@ -16,3 +19,4 @@ __pycache__/
 # Ignore OS trash
 Thumbs.db
 .DS_Store
+
