@@ -1,8 +1,11 @@
 import os
 import pandas as pd
 
-# Default CSV folder for merged datasets
-CSV_FOLDER = r"C:\Users\ranik\OneDrive\Desktop\Sociologia digitale e Analisi del Web\Tesi di laurea\CSV"
+# Go from /scripts/common/ → /scripts/ → /Reddit_scraper/
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+
+TEMP_CSV_FOLDER = os.path.join(BASE_DIR, "data_tmp")
+os.makedirs(TEMP_CSV_FOLDER, exist_ok=True)
 
 def clean_dataframe(df, text_column="Text"):
     """
