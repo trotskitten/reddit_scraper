@@ -92,7 +92,6 @@ async def run_all_once():
         community="all",
         keywords=GENAI_KEYWORDS,
         merged_filename="GENAI_merged.csv",
-        log_filename="GENAI_log.csv",
         sleep_secs=10,
     )
 
@@ -101,7 +100,6 @@ async def run_all_once():
         community="all",
         keywords=CONSULTING_KEYWORDS,
         merged_filename="consulting_kw_merged.csv",
-        log_filename="consulting_log.csv",
         sleep_secs=5,
     )
 
