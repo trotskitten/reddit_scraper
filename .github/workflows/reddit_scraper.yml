@@ -1,1 +1,29 @@
+name: Reddit Scraper
 
+on:
+  schedule:
+    - cron: "11 * * * *"   # run every hour at minute 0 (UTC)
+  workflow_dispatch:       # allow manual run from GitHub UI
+
+jobs:
+  run-scraper:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          pip install asyncpraw pandas
+
+      - name: Run scraper
+        run: python scripts/scheduler.py
+        env:
+          REDDIT_CLIENT_ID: ${{ secrets.REDDIT_CLIENT_ID }}
+          REDDIT_CLIENT_SECRET: ${{ secrets.REDDIT_CLIENT_SECRET }}
