@@ -35,6 +35,7 @@ jobs:
           name: reddit-scraper-data
           path: data_tmp/*.csv
           if-no-files-found: warn
+          retention-days: 3
           
 
       - name: Send results by email
