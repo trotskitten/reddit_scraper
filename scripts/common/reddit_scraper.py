@@ -7,6 +7,12 @@ from common.cleaning import clean_dataframe
 from common.io_helpers import merge_clean_save
 from common.reddit_client import get_reddit
 
+# Determine repo root: common → scripts → Reddit_scraper
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+TEMP_CSV_FOLDER = os.path.join(BASE_DIR, "data_tmp")
+
+# Ensure temp folder exists
+os.makedirs(TEMP_CSV_FOLDER, exist_ok=True)
 
 async def run_keyword_scraper(
     *,
@@ -15,7 +21,6 @@ async def run_keyword_scraper(
     keywords,
     merged_filename: str,
     log_filename: str,
-    base_dir: str,
     sleep_secs: int = 5,
 ):
     """
@@ -25,7 +30,6 @@ async def run_keyword_scraper(
     - cleans, merges, dedupes, logs via shared helpers
     """
 
-    os.makedirs(base_dir, exist_ok=True)
     reddit = get_reddit()
     subreddit = await reddit.subreddit(community)
 
@@ -74,12 +78,11 @@ async def run_keyword_scraper(
     df = pd.DataFrame(posts)
     cleaned_df, removed_empty, removed_duplicates = clean_dataframe(df, text_column="Text")
 
-    stats = merge_clean_save(
-        df=cleaned_df,
-        merged_filename=merged_filename,
-        log_filename=log_filename,
-        base_dir=base_dir,
-    )
+   stats = merge_clean_save(
+       df=cleaned_df,
+       merged_filename=merged_filename,
+       log_filename=log_filename,
+   )
 
     # Override raw_total with actual collected count (pre-cleaning)
     stats["raw_total"] = total_raw
@@ -103,7 +106,6 @@ async def run_keyword_scraper(
 async def run_subreddit_scraper(
     *,
     communities,
-    base_dir: str,
     per_subreddit_limit: int = 250,
 ):
     """
@@ -111,7 +113,6 @@ async def run_subreddit_scraper(
     Returns aggregated stats consistent with the orchestrator expectation.
     """
 
-    os.makedirs(base_dir, exist_ok=True)
     reddit = get_reddit()
 
     total_raw = 0
@@ -138,7 +139,7 @@ async def run_subreddit_scraper(
     }
 
 
-async def _scrape_single_subreddit(*, reddit, community: str, base_dir: str, limit: int):
+async def _scrape_single_subreddit(*, reddit, community: str, limit: int):
     """Scrape newest posts from a subreddit and maintain a cleaned merged CSV."""
 
     subreddit = await reddit.subreddit(community)
@@ -178,7 +179,7 @@ async def _scrape_single_subreddit(*, reddit, community: str, base_dir: str, lim
     earliest_str = min(timestamps).strftime("%Y-%m-%d %H:%M:%S") if timestamps else "N/A"
     print(f"Retrieved {raw_count} posts from r/{community} (earliest: {earliest_str})")
 
-    merged_file = os.path.join(base_dir, f"{community}_merged.csv")
+    merged_file = os.path.join(TEMP_CSV_FOLDER, f"{community}_merged.csv")
 
     initial_merged_count = 0
     if os.path.exists(merged_file):
