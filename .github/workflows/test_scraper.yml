@@ -2,7 +2,7 @@ name: test new Reddit Scraper
 
 on:
   schedule:
-    - cron: "11 * * * *"   # run every hour at minute 11 (UTC)
+    - cron: "*/5 * * * *"   # run every 5 minutes (UTC)
   workflow_dispatch:       # allow manual run from GitHub UI
 
 jobs:
@@ -57,7 +57,7 @@ jobs:
                   df = pd.concat([df_old, df_new], ignore_index=True)
 
                   # If you have a unique post ID column, de-duplicate by that
-                  for key in ["ID", "id", "post_id"]:
+                  for key in ["ID", "Text"]:
                       if key in df.columns:
                           df = df.drop_duplicates(subset=[key])
                           break
@@ -115,7 +115,7 @@ jobs:
           secure: true
           username: ${{ secrets.SMTP_USERNAME }}
           password: ${{ secrets.SMTP_PASSWORD }}
-          subject: "Reddit scraper run – CSVs ready"
+          subject: "Reddit scraper [TEST]"
           to: ra.nike28@gmail.com
           from: ${{ secrets.SMTP_USERNAME }}
           body: |
