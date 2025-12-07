@@ -1,4 +1,4 @@
-name: Reddit Scraper
+name: test new Reddit Scraper
 
 on:
   schedule:
