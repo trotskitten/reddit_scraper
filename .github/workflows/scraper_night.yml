@@ -1,4 +1,4 @@
-name: Reddit Scraper
+name: Reddit Scraper (Night)
 
 on:
   schedule:
