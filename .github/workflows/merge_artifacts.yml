@@ -1,0 +1,12 @@
+name: Merge Reddit Scraper Artifacts
+
+on:
+  workflow_dispatch:  # manual trigger only for now
+
+jobs:
+  merge-artifacts:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Print start message
+        run: echo "Merging artifacts workflow started."
