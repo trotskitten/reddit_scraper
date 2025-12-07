@@ -12,13 +12,19 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Download ALL artifacts
+      # Create directory so listing never fails
+      - name: Prepare merged_raw folder
+        run: mkdir -p merged_raw
+
+      # Download ONLY artifacts matching your real naming
+      - name: Download all scraper artifacts
         uses: actions/download-artifact@v4
         with:
-          pattern: "*"
-          path: merged_raw  # all artifacts extracted here
+          pattern: "reddit-scraper-data-*"
+          path: merged_raw
+          merge-multiple: true
 
       - name: List downloaded artifacts
         run: |
-          echo "Downloaded artifacts:"
+          echo "Downloaded artifacts inside merged_raw:"
           ls -R merged_raw
